@@ -1,0 +1,24 @@
+{
+  "name": "santa-detection",
+  "version": "1.0.0",
+  "description": "IoTLT アドベントカレンダー2018用",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tai-sho/adv-iotlt-santa-detection"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": {
+    "name": "ShoheiTai",
+    "url": "http://tech-style.info"
+  },
+  "license": "MIT",
+  "keywords": [],
+  "dependencies": {
+    "@google-cloud/text-to-speech": "^0.4.0",
+    "@google-cloud/vision": "^0.24.0",
+    "play-sound": "^1.1.3"
+  }
+}

@@ -45,7 +45,7 @@ function textToSpeech(text) {
     input: {text: text},
     voice: {
       languageCode: 'ja-JP',
-      name: 'ja-JP-Standard-A'
+      name: 'ja-JP-Wavenet-A'
     },
     audioConfig: {audioEncoding: 'MP3'},
   };

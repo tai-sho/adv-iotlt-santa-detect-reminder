@@ -1,16 +1,20 @@
 const { exec, spawn } = require('child_process')
 
-const IMAGE_FILE_PATH = './captured.jpeg'
+const IMAGE_FILE_PATH = './captured.jpg'
 const AUDIO_FILE_PATH = './output.mp3'
 const DETECTION_ENTITY_ID = '/m/027g6wt'
+const SPEECH_MESSAGE = 'プレゼントは忘れずそこに置いていってください。'
 
-textToSpeech('テストです');
-//const webcam = spawn('fswebcam', ['-D', '2', '-r', '1280x720', IMAGE_FILE_PATH])
-//webcam.on('close', code => {
-//  if(code === 0) {
-//    labelDetection()
-//  }
-//})
+const webcam = capture()
+webcam.on('close', code => {
+  if(code === 0) {
+    labelDetection()
+  }
+})
+
+function capture() {
+  return spawn('fswebcam', ['-D', '2', '-r', '1280x720', IMAGE_FILE_PATH])
+}
 
 function labelDetection() {
   const vision = require('@google-cloud/vision')
@@ -19,8 +23,10 @@ function labelDetection() {
     .labelDetection(IMAGE_FILE_PATH)
     .then(results => {
       const labels = results[0].labelAnnotations;
+      console.log(labels)
       labels.some(label => {
         if(label.mid === DETECTION_ENTITY_ID) {
+          textToSpeech(label.description)
           return true
         }
       })
@@ -39,8 +45,7 @@ function textToSpeech(text) {
     input: {text: text},
     voice: {
       languageCode: 'ja-JP',
-      name: 'ja-JP-Standard-A',
-      ssmlGender: 'NEUTRAL'
+      name: 'ja-JP-Standard-A'
     },
     audioConfig: {audioEncoding: 'MP3'},
   };
@@ -56,7 +61,8 @@ function textToSpeech(text) {
         console.error('ERROR:', err);
         return;
       } 
-      console.log('Audio content written to file: output.mp3');
+      console.log('Audio content written to file: ' + AUDIO_FILE_PATH);
+      playAudio()
     });
   });
 
@@ -66,6 +72,8 @@ function playAudio() {
   const player = require('play-sound')();
   
   player.play(AUDIO_FILE_PATH, err => {
-      if (err) throw err
+      if (err) {
+        console.error('ERROR:', err);
+      }
   });
 }
